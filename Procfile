@@ -1,1 +1,1 @@
-web: bin/justcheck
+web: main -port $PORT
