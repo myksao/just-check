@@ -28,6 +28,7 @@ func NewServer(logger *zap.Logger,validator *validator.Validate) *server{
 
 func (server *server) Run()  error{
 	// Disable Console Color, you don't need console color when writing the logs to file.
+	gin.SetMode(gin.ReleaseMode)
 	gin.DisableConsoleColor()
 
 	// Logging to a file.
