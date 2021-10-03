@@ -1,1 +1,1 @@
-web: justcheck/cmd
+web: ./cmd/
