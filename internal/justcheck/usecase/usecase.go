@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	"image"
 	_ "image/jpeg"
+	_ "image/png"
 	"mime/multipart"
 	"strings"
 )

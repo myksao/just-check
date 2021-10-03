@@ -8,7 +8,6 @@ import (
 	"io"
 	justCheckHandler "justcheck/internal/justcheck/delivery/http"
 	"justcheck/internal/justcheck/usecase"
-	"log"
 	"os"
 )
 
@@ -43,9 +42,8 @@ func (server *server) Run()  error{
 	justCheckH.MapJustCheckRoute()
 
 	port := os.Getenv("PORT")
-
 	if port == "" {
-		log.Fatal("$PORT must be set")
+		port = "8080"
 	}
 
 	ginRunErr := make(chan error)
