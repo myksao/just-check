@@ -1,1 +1,1 @@
-web: main -port $PORT
+web: cmd -port $PORT
