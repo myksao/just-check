@@ -1,5 +1,7 @@
 module justcheck
 
+// +heroku goVersion go1.17
+// +heroku install ./cmd/
 go 1.16
 
 require (
