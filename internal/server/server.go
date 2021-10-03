@@ -8,7 +8,6 @@ import (
 	"io"
 	justCheckHandler "justcheck/internal/justcheck/delivery/http"
 	"justcheck/internal/justcheck/usecase"
-	"log"
 	"os"
 )
 
@@ -28,8 +27,8 @@ func NewServer(logger *zap.Logger,validator *validator.Validate) *server{
 }
 
 func (server *server) Run()  error{
-	// Disable Console Color, you don't need console color when writing the logs to file.
 	gin.SetMode(gin.ReleaseMode)
+	// Disable Console Color, you don't need console color when writing the logs to file.
 	gin.DisableConsoleColor()
 
 	// Logging to a file.
@@ -42,15 +41,9 @@ func (server *server) Run()  error{
 	justCheckH := justCheckHandler.NewJustCheckHandler(justChkUC,server.validator,server.engine,server.logger)
 	justCheckH.MapJustCheckRoute()
 
-	port := os.Getenv("PORT")
-
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
-
 	ginRunErr := make(chan error)
 	go func() {
-		err := server.engine.Run(":"+port)
+		err := server.engine.Run(":8080")
 		if err != nil {
 			ginRunErr <- errors.Wrap(err,"")
 		}
