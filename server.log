@@ -1,0 +1,4 @@
+[GIN-debug] POST   /check                    --> justcheck/internal/justcheck/delivery/http.(*justCheckHandler).Check.func1 (4 handlers)
+[GIN-debug] Listening and serving HTTP on :8080
+::1 - [Sun, 03 Oct 2021 09:11:32 CDT] "POST /check HTTP/1.1 406 17.038ms "PostmanRuntime/7.28.4" "
+::1 - [Sun, 03 Oct 2021 09:15:14 CDT] "POST /check HTTP/1.1 200 23.9102ms "PostmanRuntime/7.28.4" "
