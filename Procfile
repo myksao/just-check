@@ -1,1 +1,1 @@
-web: bin/just-check/cmd
+web: just-check/cmd
