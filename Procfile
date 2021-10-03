@@ -1,1 +1,1 @@
-web: /bin/just-check/cmd
+web: go run ./cmd/main.go
