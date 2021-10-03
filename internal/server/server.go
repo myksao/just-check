@@ -49,6 +49,7 @@ func (server *server) Run()  error{
 		}
 	}()
 
+
 	if ginRunErr!=nil{
 		msg := <- ginRunErr
 		server.logger.Error(msg.Error())
