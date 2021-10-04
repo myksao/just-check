@@ -29,7 +29,7 @@ func (justChk *justCheckHandler) Check()  gin.HandlerFunc{
 	return func(context *gin.Context) {
 		type request struct{
 			File *multipart.FileHeader `form:"file" binding:"required"`
-			ContentType string `form:"type" binding:"required"`
+			ContentType string `form:"type"`
 		}
 
 		var requestData request
