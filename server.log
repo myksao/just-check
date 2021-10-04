@@ -1,1 +1,3 @@
-::1 - [Sun, 03 Oct 2021 12:08:58 CDT] "POST /check HTTP/1.1 200 42.7602ms "PostmanRuntime/7.28.4" "
+::1 - [Mon, 04 Oct 2021 11:48:28 CDT] "POST /check HTTP/1.1 406 24.7898ms "PostmanRuntime/7.28.4" "
+::1 - [Mon, 04 Oct 2021 11:48:36 CDT] "POST /check HTTP/1.1 406 18.945ms "PostmanRuntime/7.28.4" "
+::1 - [Mon, 04 Oct 2021 11:48:42 CDT] "POST /check HTTP/1.1 406 57.6987ms "PostmanRuntime/7.28.4" "

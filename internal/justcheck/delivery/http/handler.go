@@ -54,19 +54,6 @@ func (justChk *justCheckHandler) Check()  gin.HandlerFunc{
 			return
 		}
 
-		check, checkErr := justChk.justCheckUC.Check(context.Request.Context(),open,requestData.ContentType)
-		if checkErr != nil {
-			justChk.logger.Sugar().Error(checkErr.Error())
-			context.JSON(http.StatusNotAcceptable,gin.H{
-				"message":checkErr.Error(),
-			})
-			return
-		}
-
-		context.JSON(http.StatusOK,gin.H{
-			"message":check,
-		})
-
 		defer func(open multipart.File) {
 			closeErr := open.Close()
 			if closeErr != nil {
@@ -77,5 +64,22 @@ func (justChk *justCheckHandler) Check()  gin.HandlerFunc{
 				return
 			}
 		}(open)
+
+		check, checkErr := justChk.justCheckUC.Check(context.Request.Context(),open,requestData.ContentType)
+		if checkErr != nil {
+			justChk.logger.Sugar().Error(checkErr.Error())
+			context.JSON(http.StatusNotAcceptable,gin.H{
+				"message":checkErr.Error(),
+			})
+			return
+		}
+
+
+		context.JSON(http.StatusOK,gin.H{
+			"message":check,
+		})
+
+
+
 	}
 }

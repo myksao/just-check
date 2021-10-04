@@ -11,6 +11,7 @@ import (
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
+	"log"
 	"mime/multipart"
 	"strings"
 )
@@ -27,43 +28,71 @@ func NewJustCheckUseCase(logger *zap.Logger,validator *validator.Validate) *just
 	}
 }
 
-func (justChkUC justCheckUseCase) Check(ctx context.Context,file multipart.File,contentType string)  (string,error){
+func (justChkUC justCheckUseCase) Check(ctx context.Context,file multipart.File,contentType string)  (result string, err error){
+
+	defer func()  {
+		if pErr := recover(); pErr != nil {
+			log.Println("panic occurred:", pErr)
+			switch x := pErr.(type) {
+			case string:
+				//TODO: Add a custom error message
+				err = errors.New(x)
+
+			case error:
+				err = x
+
+			default:
+				err = errors.New("Unknown panic")
+
+			}
+
+		}
+	}()
 
 	// open and decode image file
 	//file, _ := os.Open("qrcode.jpg")
 	img, _, imgErr := image.Decode(file)
 	if imgErr != nil {
 		justChkUC.logger.Sugar().Error(imgErr)
-		return "",errors.Wrap(imgErr,"Couldn't decode the image")
+		err = errors.Wrap(imgErr,"Couldn't decode the image")
+		return result,err
 	}
 	// prepare BinaryBitmap
 	bmp, bmpErr := gozxing.NewBinaryBitmapFromImage(img)
 	if bmpErr != nil {
 		justChkUC.logger.Sugar().Error(bmpErr)
-		return "",errors.Wrap(bmpErr,"Couldn't convert the image")
+		err = errors.Wrap(bmpErr,"Couldn't convert the image")
+		return result,err
 	}
 
 	// decode image
 	qrReader := qrcode.NewQRCodeReader()
-	result, resultErr := qrReader.Decode(bmp, nil)
+	resultQrReader, resultErr := qrReader.Decode(bmp, nil)
 	if resultErr != nil {
 		justChkUC.logger.Sugar().Error(resultErr)
-		return "", errors.Wrap(resultErr,"Couldn't read the data embedded in the code")
+
+		err = errors.Wrap(resultErr,"Couldn't read the data embedded in the code")
+		return result,err
 	}
 
 	if len(contentType) > 0 {
-		validatorErr := justChkUC.validator.Var(result.GetText(), fmt.Sprintf("%s,%s", "required", strings.ToLower(contentType)))
+		validatorErr := justChkUC.validator.Var(resultQrReader.GetText(), fmt.Sprintf("%s,%s", "required", strings.ToLower(contentType)))
 		if validatorErr != nil {
 			justChkUC.logger.Sugar().Error(validatorErr)
-			return "", errors.Wrap(validatorErr, "Couldn't validate the content type of the QRCode")
+			err = errors.Wrap(validatorErr, "Couldn't validate the content type of the QRCode")
+			return result,err
 		}
+
 	}else {
-		validatorErr := justChkUC.validator.Var(result.GetText(), fmt.Sprintf("%s,%s", "required","ascii" ))
+
+		validatorErr := justChkUC.validator.Var(resultQrReader.GetText(), fmt.Sprintf("%s,%s", "required","ascii" ))
 		if validatorErr != nil {
 			justChkUC.logger.Sugar().Error(validatorErr)
-			return "", errors.Wrap(validatorErr, "Couldn't validate the content type of the QRCode")
+			err = errors.Wrap(validatorErr, "Couldn't validate the content type of the QRCode")
+			return result,err
 		}
 	}
 
-	return result.GetText(),nil
+	return result,err
 }
+
