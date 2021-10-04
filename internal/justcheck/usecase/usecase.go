@@ -74,9 +74,10 @@ func (justChkUC justCheckUseCase) Check(ctx context.Context,file multipart.File,
 		err = errors.Wrap(resultErr,"Couldn't read the data embedded in the code")
 		return result,err
 	}
+	result = resultQrReader.GetText()
 
 	if len(contentType) > 0 {
-		validatorErr := justChkUC.validator.Var(resultQrReader.GetText(), fmt.Sprintf("%s,%s", "required", strings.ToLower(contentType)))
+		validatorErr := justChkUC.validator.Var(result, fmt.Sprintf("%s,%s", "required", strings.ToLower(contentType)))
 		if validatorErr != nil {
 			justChkUC.logger.Sugar().Error(validatorErr)
 			err = errors.Wrap(validatorErr, "Couldn't validate the content type of the QRCode")
@@ -85,7 +86,7 @@ func (justChkUC justCheckUseCase) Check(ctx context.Context,file multipart.File,
 
 	}else {
 
-		validatorErr := justChkUC.validator.Var(resultQrReader.GetText(), fmt.Sprintf("%s,%s", "required","ascii" ))
+		validatorErr := justChkUC.validator.Var(result, fmt.Sprintf("%s,%s", "required","ascii" ))
 		if validatorErr != nil {
 			justChkUC.logger.Sugar().Error(validatorErr)
 			err = errors.Wrap(validatorErr, "Couldn't validate the content type of the QRCode")
